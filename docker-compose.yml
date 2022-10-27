@@ -1,0 +1,45 @@
+version: '3' # version: '3.9'
+
+# dbコンテナのボリュームに指定した名称を指定する。
+volumes:
+  db-data:
+
+services:
+  web:
+    build: .
+    # command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    ports:
+      - '3001:3000'
+    volumes:
+      - '.:/product-register'
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=postgres'
+
+    # コンテナの起動状態を保つための設定
+    tty: true
+
+    # コンテナの標準入力をオープンにして、ターミナルからの操作を可能にする。
+    stdin_open: true
+
+    #依存するコンテナを指定し、起動時の順序が決まる
+    depends_on:
+      - db
+
+    #アクセス可能なコンテナを指定する。
+    links:
+      - db
+
+  db:
+    # docker-hubのpostgresのイメージを使う
+    image: postgres
+
+    # ホストのボリュームにDBデータを保管することでコンテナが消えてもデータが残るようにする
+    volumes:
+      - './db-data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=postgres'
+
+      # テスト環境でTravisCIから実行する際POSTGRESQLの認証を通すため
+      - 'POSTGRES_HOST_AUTH_METHOD=trust'
