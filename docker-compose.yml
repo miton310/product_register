@@ -1,5 +1,6 @@
 version: '3' # version: '3.9'
 
+
 # dbコンテナのボリュームに指定した名称を指定する。
 volumes:
   db-data:
