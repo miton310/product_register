@@ -7,6 +7,6 @@ RUN apt-get update && apt-get install -y \
 	yarn \
   vim
 
-WORKDIR /product-register
-COPY Gemfile Gemfile.lock /product-register/
+WORKDIR /product_register
+COPY Gemfile Gemfile.lock /product_register/
 RUN bundle install
